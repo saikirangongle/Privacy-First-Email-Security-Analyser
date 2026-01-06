@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Security & Phishing Analyzer</title>
+
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <h1>Email Security</h1>
+    <p class="subtitle">Privacy-first phishing analysis</p>
+  </header>
+
+  <!-- Analysis Toggle -->
+  <section class="toggle-section">
+    <label class="toggle">
+      <input
+    type="checkbox"
+    id="analysisToggle"
+    aria-label="Enable email security analysis"
+  />
+      <span class="slider"></span>
+    </label>
+    <span class="toggle-label">Enable Analysis</span>
+  </section>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <button id="homeBtn" class="nav-btn active">Home</button>
+    <button id="gmailBtn" class="nav-btn">Gmail Security Check</button>
+    <button id="manualBtn" class="nav-btn">Manual Analysis</button>
+    <button id="apiBtn" class="nav-btn">API Settings</button>
+    <button id="settingsBtn" class="nav-btn">Settings</button>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main id="viewContainer">
+
+    <!-- Home View -->
+    <section id="homeView" class="view active">
+      <h2>Welcome</h2>
+      <p>
+        This tool helps you identify phishing and suspicious emails using
+        explainable security checks.
+      </p>
+
+      <ul class="info-list">
+        <li>✔ Gmail Security Check — quick body-level scan</li>
+        <li>✔ Manual Email Analysis — full forensic inspection</li>
+        <li>✔ Privacy-first and user-controlled</li>
+      </ul>
+    </section>
+
+    <!-- Gmail Security Check View -->
+    <section id="gmailView" class="view">
+      <h2>Gmail Security Check</h2>
+      <p class="hint">
+        Performs a quick security check on the currently opened Gmail email.
+        Only visible email content and links are analyzed.
+      </p>
+
+      <div id="gmailNotice" class="notice hidden">
+        Gmail Security Check is available only when a Gmail email is open.
+      </div>
+
+      <button id="runGmailCheck" class="primary-btn">
+        Analyze Opened Email
+      </button>
+
+      <div id="gmailResult" class="result-container"></div>
+    </section>
+
+    <!-- Manual Analysis View -->
+    <section id="manualView" class="view">
+      <h2>Manual Email Analysis</h2>
+      <p class="hint">
+        Paste raw email content (headers + body) for full forensic analysis.
+      </p>
+
+      <textarea
+        id="rawEmailInput"
+        placeholder="Paste raw email content here..."
+      ></textarea>
+
+      <button id="runManualAnalysis" class="primary-btn">
+        Analyze Email
+      </button>
+
+      <div id="manualResult" class="result-container"></div>
+    </section>
+
+    <!-- API Settings View -->
+    <section id="apiView" class="view">
+      <h2>API Settings</h2>
+      <p class="hint">
+        Add optional threat-intelligence API keys. Keys are stored locally.
+      </p>
+
+      <label>
+        VirusTotal API Key
+        <input type="text" id="vtKey" placeholder="Enter VirusTotal API key" />
+      </label>
+
+      <label>
+        AbuseIPDB API Key
+        <input type="text" id="abuseKey" placeholder="Enter AbuseIPDB API key" />
+      </label>
+
+      <button id="saveApiKeys" class="primary-btn">Save Keys</button>
+    </section>
+
+    <!-- Settings View -->
+    <section id="settingsView" class="view">
+      <h2>Settings</h2>
+
+      <label>
+        <input type="checkbox" id="enableLinkChecks" checked />
+        Enable link analysis
+      </label>
+
+      <label>
+        <input type="checkbox" id="enableKeywordChecks" checked />
+        Enable phishing keyword detection
+      </label>
+
+      <label>
+        <input type="checkbox" id="enableBrandChecks" checked />
+        Enable brand impersonation detection
+      </label>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <small>© Email Security & Phishing Analyzer</small>
+  </footer>
+
+  <!-- IMPORTANT: ES Module -->
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
