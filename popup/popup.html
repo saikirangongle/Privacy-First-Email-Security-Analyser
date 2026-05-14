@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Security & Phishing Analyzer</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="app-header">
+    <div class="app-header-icon">🛡️</div>
+    <div class="app-header-text">
+      <h1>Email Security Analyzer</h1>
+      <p class="subtitle">Privacy-first phishing analysis</p>
+    </div>
+  </header>
+
+  <!-- ── Analysis Toggle ── -->
+  <section class="toggle-section">
+    <div class="toggle-left">
+      <label class="toggle">
+        <input type="checkbox" id="analysisToggle" aria-label="Enable analysis" />
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Analysis</span>
+    </div>
+    <span class="toggle-status" id="toggleStatus">Disabled</span>
+  </section>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <button id="homeBtn" class="nav-btn active" aria-selected="true">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button id="gmailBtn" class="nav-btn" aria-selected="false">
+      <span class="nav-icon">📧</span>
+      <span class="nav-label">Gmail</span>
+    </button>
+    <button id="manualBtn" class="nav-btn" aria-selected="false">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Manual</span>
+    </button>
+    <button id="apiBtn" class="nav-btn" aria-selected="false">
+      <span class="nav-icon">🔑</span>
+      <span class="nav-label">API</span>
+    </button>
+    <button id="settingsBtn" class="nav-btn" aria-selected="false">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Settings</span>
+    </button>
+  </nav>
+
+  <!-- ── Views ── -->
+  <main id="viewContainer">
+
+    <!-- Home -->
+    <section id="homeView" class="view active">
+      <p class="view-title">Welcome</p>
+      <p class="view-hint">Identify phishing and suspicious emails with explainable, privacy-first analysis — nothing leaves your browser.</p>
+
+      <div id="homeStatusBar" class="home-status-bar">
+        <span>⚠️</span>
+        <span>Analysis is disabled. Toggle it on to begin.</span>
+      </div>
+
+      <div class="home-feature-list">
+        <div class="home-feature-item" id="goToGmail" role="button" tabindex="0">
+          <span class="home-feature-icon">📧</span>
+          <div class="home-feature-text">
+            <strong>Gmail Security Check</strong>
+            <span>Quick body-level scan of an open Gmail email</span>
+          </div>
+        </div>
+        <div class="home-feature-item" id="goToManual" role="button" tabindex="0">
+          <span class="home-feature-icon">🔍</span>
+          <div class="home-feature-text">
+            <strong>Manual Email Analysis</strong>
+            <span>Paste raw email for full header forensics</span>
+          </div>
+        </div>
+        <div class="home-feature-item" id="goToApi" role="button" tabindex="0">
+          <span class="home-feature-icon">🔑</span>
+          <div class="home-feature-text">
+            <strong>Threat Intelligence</strong>
+            <span>Add VirusTotal &amp; AbuseIPDB API keys (optional)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gmail Security Check -->
+    <section id="gmailView" class="view">
+      <p class="view-title">Gmail Security Check</p>
+      <p class="view-hint">Analyzes the currently opened Gmail email — body text and links only. No headers or attachments accessed.</p>
+
+      <div id="gmailNotice" class="notice warning hidden">
+        <span class="notice-icon">⚠️</span>
+        <span>Open a Gmail email first, then run this check.</span>
+      </div>
+
+      <button id="runGmailCheck" class="primary-btn">
+        <span class="btn-spinner"></span>
+        <span class="btn-text">🔎 Analyze Opened Email</span>
+      </button>
+
+      <div id="gmailResult" class="result-container"></div>
+    </section>
+
+    <!-- Manual Analysis -->
+    <section id="manualView" class="view">
+      <p class="view-title">Manual Email Analysis</p>
+      <p class="view-hint">Paste raw email content (headers + body) for full forensic inspection including SPF, DKIM, DMARC and travel path.</p>
+
+      <div class="input-group">
+        <label class="input-label" for="rawEmailInput">Raw Email Content</label>
+        <textarea id="rawEmailInput" placeholder="Paste raw email here (Received: headers + body)…"></textarea>
+      </div>
+
+      <button id="runManualAnalysis" class="primary-btn">
+        <span class="btn-spinner"></span>
+        <span class="btn-text">🔬 Analyze Email</span>
+      </button>
+
+      <div id="manualResult" class="result-container"></div>
+    </section>
+
+    <!-- API Settings -->
+    <section id="apiView" class="view">
+      <p class="view-title">API Settings</p>
+      <p class="view-hint">Optional threat intelligence lookups. Keys are stored locally — only URLs or IPs are ever sent.</p>
+
+      <div class="api-provider-card">
+        <div class="api-provider-header">
+          <span class="api-provider-icon">🦠</span>
+          <div>
+            <div class="api-provider-title">VirusTotal</div>
+            <div class="api-provider-desc">URL reputation scanning</div>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom:0">
+          <div class="api-key-wrapper">
+            <input type="password" id="vtKey" placeholder="Enter VirusTotal API key" autocomplete="off" />
+            <button class="api-key-toggle" data-target="vtKey" title="Show/hide key">👁</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="api-provider-card">
+        <div class="api-provider-header">
+          <span class="api-provider-icon">🌐</span>
+          <div>
+            <div class="api-provider-title">AbuseIPDB</div>
+            <div class="api-provider-desc">IP address reputation</div>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom:0">
+          <div class="api-key-wrapper">
+            <input type="password" id="abuseKey" placeholder="Enter AbuseIPDB API key" autocomplete="off" />
+            <button class="api-key-toggle" data-target="abuseKey" title="Show/hide key">👁</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="saveApiKeys" class="api-save-btn">💾 Save Keys Locally</button>
+    </section>
+
+    <!-- Settings -->
+    <section id="settingsView" class="view">
+      <p class="view-title">Analysis Settings</p>
+      <p class="view-hint">Choose which checks run during analysis. All enabled by default.</p>
+
+      <div class="settings-group">
+        <label class="setting-row">
+          <div class="setting-row-left">
+            <span class="setting-icon">🔗</span>
+            <div class="setting-text">
+              <strong>Link Analysis</strong>
+              <span>Check URLs for shorteners, IP hosts, bad TLDs</span>
+            </div>
+          </div>
+          <input type="checkbox" id="enableLinkChecks" checked />
+        </label>
+
+        <label class="setting-row">
+          <div class="setting-row-left">
+            <span class="setting-icon">💬</span>
+            <div class="setting-text">
+              <strong>Keyword Detection</strong>
+              <span>Detect urgency, fear and credential-request language</span>
+            </div>
+          </div>
+          <input type="checkbox" id="enableKeywordChecks" checked />
+        </label>
+
+        <label class="setting-row">
+          <div class="setting-row-left">
+            <span class="setting-icon">🏷️</span>
+            <div class="setting-text">
+              <strong>Brand Impersonation</strong>
+              <span>Detect brand mentions mismatched with link domains</span>
+            </div>
+          </div>
+          <input type="checkbox" id="enableBrandChecks" checked />
+        </label>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <span class="footer-text">Email Security Analyzer</span>
+    <span class="footer-privacy-badge">🔒 Privacy-first</span>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

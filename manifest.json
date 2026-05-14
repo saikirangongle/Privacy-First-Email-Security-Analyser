@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Email Security & Phishing Analyzer",
+  "description": "Privacy-first email security analysis with Gmail Security Check and manual email analysis.",
+  "version": "1.0",
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+
+  "permissions": [
+    "storage",
+    "scripting",
+    "tabs",
+    "alarms"
+  ],
+
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://www.virustotal.com/*",
+    "https://api.abuseipdb.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content/gmail-content.js"]
+    }
+  ]
+}
